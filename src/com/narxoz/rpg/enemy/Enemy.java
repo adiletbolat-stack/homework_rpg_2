@@ -86,4 +86,14 @@ public interface Enemy {
     // Test your clone: modify the clone's abilities.
     // Does the original change? If yes → your copy is too shallow!
 
+    String getName();
+    int getHealth();
+    int getDamage();
+    int getDefense();
+    int getSpeed();
+    List<Ability> getAbilities();
+    LootTable getLootTable();
+    void displayInfo();
+    Enemy clone();
+
 }

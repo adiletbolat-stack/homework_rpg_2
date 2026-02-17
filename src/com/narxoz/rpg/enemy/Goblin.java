@@ -2,6 +2,7 @@ package com.narxoz.rpg.enemy;
 
 import com.narxoz.rpg.combat.Ability;
 import com.narxoz.rpg.loot.LootTable;
+import com.narxoz.rpg.enemy.Enemy;
 
 import java.util.List;
 import java.util.ArrayList;
@@ -98,23 +99,47 @@ public class Goblin implements Enemy {
         // TODO: Display loot table
     }
 
-    // TODO: Implement clone() for Prototype pattern
-    // This is CRITICAL! You must deep copy:
-    //   - The abilities list (create new list, clone each ability)
-    //   - The loot table (clone it)
-    //   - Primitive fields can be copied directly
-    //
-    // Example skeleton:
-    // public Enemy clone() {
-    //     Goblin copy = new Goblin(this.name);
-    //     copy.health = this.health;
-    //     copy.damage = this.damage;
-    //     copy.defense = this.defense;
-    //     copy.speed = this.speed;
-    //     copy.abilities = ???  // DEEP COPY! Not just = this.abilities!
-    //     copy.lootTable = ???  // DEEP COPY!
-    //     return copy;
-    // }
+    @Override
+    public int getDamage() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'getDamage'");
+    }
+
+    @Override
+    public int getDefense() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'getDefense'");
+    }
+
+    @Override
+    public int getSpeed() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'getSpeed'");
+    }
+
+    @Override
+    public List<Ability> getAbilities() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'getAbilities'");
+    }
+
+    @Override
+    public LootTable getLootTable() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'getLootTable'");
+    }
+
+    @Override
+    public Enemy clone() {
+        Goblin copy = new Goblin(this.name);
+        copy.health = this.health;
+        copy.damage = this.damage;
+        copy.defense = this.defense;
+        copy.speed = this.speed;
+        copy.abilities = new ArrayList<>(this.abilities);  // DEEP COPY of list
+        copy.lootTable = this.lootTable;  // TODO: implement deep copy if LootTable is mutable
+        return copy;
+    }
 
     // TODO: Add helper methods for Prototype variant creation
     // Consider methods like:
