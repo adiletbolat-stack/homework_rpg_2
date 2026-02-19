@@ -1,6 +1,8 @@
 package com.narxoz.rpg.enemy;
 
 import com.narxoz.rpg.combat.Ability;
+import com.narxoz.rpg.combat.FlameBreath;
+import com.narxoz.rpg.combat.MeteorStorm;
 import com.narxoz.rpg.loot.LootTable;
 import com.narxoz.rpg.enemy.Enemy;
 
@@ -67,30 +69,22 @@ import java.util.LinkedHashMap;
 
 public class DragonBoss implements Enemy {
 
-    // --- Basic Stats ---
     private String name;
     private int health;
     private int damage;
     private int defense;
     private int speed;
 
-    // --- Elemental Theme ---
     private String element;
 
-    // --- Abilities ---
     private List<Ability> abilities;
 
-    // --- Boss Phases (health thresholds that trigger behavior changes) ---
-    // Phase number -> health threshold at which this phase activates
     private Map<Integer, Integer> phases;
 
-    // --- Loot ---
     private LootTable lootTable;
 
-    // --- AI Behavior ---
     private String aiBehavior;
 
-    // --- Special Properties ---
     private boolean canFly;
     private boolean hasBreathAttack;
     private int wingspan;
@@ -188,7 +182,7 @@ public class DragonBoss implements Enemy {
     }
 
     public void displayInfo() {
-        System.out.println("=== " + name + " (Dragon Boss) ===");
+        System.out.println("=== " + name + " ===");
         System.out.println("Health: " + health + " | Damage: " + damage
                 + " | Defense: " + defense + " | Speed: " + speed);
         System.out.println("Element: " + element);
@@ -327,6 +321,8 @@ public class DragonBoss implements Enemy {
                 .setAI(this.aiBehavior)
                 .setCanFly(this.canFly)
                 .setHasBreathAttack(this.hasBreathAttack)
+                .addAbility(new FlameBreath())
+                .addAbility(new MeteorStorm())
                 .setWingspan(this.wingspan)
                 .setLootTable(deepCopyLootTable(this.lootTable));
 

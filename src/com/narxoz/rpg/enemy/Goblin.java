@@ -2,61 +2,14 @@ package com.narxoz.rpg.enemy;
 
 import com.narxoz.rpg.combat.Ability;
 import com.narxoz.rpg.loot.LootTable;
-import com.narxoz.rpg.enemy.Enemy;
 
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 
-/**
- * Example basic enemy implementation — a simple Goblin.
- *
- * This is provided as a REFERENCE to show enemy structure.
- * Study this implementation, then create more enemies.
- *
- * Notice:
- * - Simple stats (low health, low damage)
- * - Basic constructor (only a few parameters — no Builder needed!)
- * - This is intentionally simple to contrast with DragonBoss.java
- *
- * ============================================================
- * IMPORTANT OBSERVATION:
- * ============================================================
- *
- * A Goblin is simple: name, health, damage, defense — done.
- * A regular constructor works fine here:
- * new Goblin("Forest Goblin")
- *
- * But look at DragonBoss.java... THAT'S where Builder shines!
- * Simple objects don't need Builder. Complex objects do.
- * Knowing WHEN to use a pattern is as important as knowing HOW.
- *
- * ============================================================
- * PROTOTYPE PATTERN NOTE:
- * ============================================================
- *
- * Goblin is a GREAT candidate for Prototype pattern!
- * Imagine you need 50 goblins for a dungeon. Instead of:
- * new Goblin("Goblin 1"), new Goblin("Goblin 2"), ...
- *
- * You can:
- * Goblin template = new Goblin("Goblin");
- * Enemy goblin1 = template.clone(); // Fast!
- * Enemy goblin2 = template.clone(); // Fast!
- *
- * And for variants:
- * Enemy elite = template.clone();
- * // modify elite's stats to 2x
- *
- * TODO: Implement the clone() method with DEEP COPY.
- * TODO: Create similar basic enemies: Skeleton, Orc, etc.
- * TODO: Consider what needs deep vs shallow copy here.
- * - Primitive stats (health, damage) → shallow copy is fine
- * - Ability list → MUST be deep copied!
- * - LootTable → MUST be deep copied!
- */
 public class Goblin implements Enemy {
 
     private String name;
+
     private int health;
     private int damage;
     private int defense;
@@ -64,6 +17,9 @@ public class Goblin implements Enemy {
 
     private List<Ability> abilities;
     private LootTable lootTable;
+
+    private String element = "NONE";
+    private String aiBehavior = "NEUTRAL";
 
     public Goblin(String name) {
         this.name = name;
@@ -117,50 +73,41 @@ public class Goblin implements Enemy {
         System.out.println("=== " + name + " (Goblin) ===");
         System.out.println("Health: " + health + " | Damage: " + damage
                 + " | Defense: " + defense + " | Speed: " + speed);
+        System.out.println("Element: " + element + " | AI: " + aiBehavior);
 
         System.out.println("Abilities (" + abilities.size() + "):");
         for (Ability a : abilities) {
-            System.out.println("  - " + a);
+            System.out.println("  - " + a.getName() + ": " + a.getDescription());
         }
 
-        System.out.println("Loot: " + (lootTable != null ? lootTable : "None"));
+        System.out.println("Loot: " + (lootTable != null ? lootTable.getLootInfo() : "None"));
     }
 
     @Override
     public Enemy clone() {
         Goblin copy = new Goblin(this.name);
-
         copy.health = this.health;
         copy.damage = this.damage;
         copy.defense = this.defense;
         copy.speed = this.speed;
 
+        copy.element = this.element;
+        copy.aiBehavior = this.aiBehavior;
+
         copy.abilities = new ArrayList<>();
         for (Ability a : this.abilities) {
-            copy.abilities.add(deepCopyAbility(a));
+            copy.abilities.add(a != null ? a.clone() : null);
         }
 
-        copy.lootTable = deepCopyLootTable(this.lootTable);
+        copy.lootTable = (this.lootTable != null) ? this.lootTable.clone() : null;
 
         return copy;
     }
 
-    private Ability deepCopyAbility(Ability ability) {
-        if (ability == null)
-            return null;
-
-        return ability;
-    }
-
-    private LootTable deepCopyLootTable(LootTable lootTable) {
-        if (lootTable == null)
-            return null;
-        return lootTable;
-    }
-
     public void multiplyStats(double multiplier) {
-        if (multiplier <= 0)
+        if (multiplier <= 0) {
             throw new IllegalArgumentException("Multiplier must be > 0");
+        }
 
         this.health = (int) Math.round(this.health * multiplier);
         this.damage = (int) Math.round(this.damage * multiplier);
@@ -169,8 +116,9 @@ public class Goblin implements Enemy {
     }
 
     public void addAbility(Ability ability) {
-        if (ability != null)
+        if (ability != null) {
             abilities.add(ability);
+        }
     }
 
     public void setLootTable(LootTable lootTable) {
@@ -179,5 +127,25 @@ public class Goblin implements Enemy {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public void setStats(int health, int damage, int defense, int speed) {
+        if (health <= 0) throw new IllegalArgumentException("Health must be > 0");
+        if (damage < 0 || defense < 0 || speed < 0) {
+            throw new IllegalArgumentException("Stats cannot be negative");
+        }
+
+        this.health = health;
+        this.damage = damage;
+        this.defense = defense;
+        this.speed = speed;
+    }
+
+    public void setElement(String element) {
+        this.element = (element == null || element.isEmpty()) ? "NONE" : element;
+    }
+
+    public void setAI(String aiBehavior) {
+        this.aiBehavior = (aiBehavior == null || aiBehavior.isEmpty()) ? "NEUTRAL" : aiBehavior;
     }
 }
